@@ -8,12 +8,12 @@ namespace CaesarCipher
 {   
     public class Program
     {
-        static void RunCryptAndPrintResults(CommandLineOptions options)
+        private static int RunCryptAndPrintResults(CommandLineOptions options)
         {
             if (!File.Exists(options.InputFile))
             {
                 Console.WriteLine($"{ options.InputFile } is not a file");
-                return;
+                return 1;
             }
 
             var cryptedLines = File
@@ -24,13 +24,15 @@ namespace CaesarCipher
             {
                 Console.WriteLine(line);
             }
+
+            return 0;
         }
         
-        static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            CommandLine.Parser.Default
+            return CommandLine.Parser.Default
                 .ParseArguments<CommandLineOptions>(args)
-                .WithParsed<CommandLineOptions>(RunCryptAndPrintResults);
+                .MapResult(RunCryptAndPrintResults, errs => 1);
         }
     }
 }
